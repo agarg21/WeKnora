@@ -52,8 +52,8 @@ jobs:
             VITE_FRONTEND_COMMIT=${{ steps.version.outputs.commit_id }}
           labels: ${{ steps.meta.outputs.labels }}
           tags: ${{ steps.meta.outputs.tags }}
-          cache-from: type=gha,scope=build-ui
-          cache-to: type=gha,scope=build-ui,mode=max
+          cache-from: type=registry,ref=${{ secrets.DOCKERHUB_USERNAME }}/weknora-ui:buildcache
+          cache-to: type=registry,ref=${{ secrets.DOCKERHUB_USERNAME }}/weknora-ui:buildcache,mode=max
 
   build-docreader:
     runs-on: ubuntu-latest
@@ -101,8 +101,8 @@ jobs:
           context: .
           labels: ${{ steps.meta.outputs.labels }}
           tags: ${{ steps.meta.outputs.tags }}
-          cache-from: type=gha,scope=build-docreader
-          cache-to: type=gha,scope=build-docreader,mode=max
+          cache-from: type=registry,ref=${{ secrets.DOCKERHUB_USERNAME }}/weknora-docreader:buildcache
+          cache-to: type=registry,ref=${{ secrets.DOCKERHUB_USERNAME }}/weknora-docreader:buildcache,mode=max
 
   build-sandbox:
     runs-on: ubuntu-latest
@@ -135,8 +135,8 @@ jobs:
           context: .
           labels: ${{ steps.meta.outputs.labels }}
           tags: ${{ steps.meta.outputs.tags }}
-          cache-from: type=gha,scope=build-sandbox
-          cache-to: type=gha,scope=build-sandbox,mode=max
+          cache-from: type=registry,ref=${{ secrets.DOCKERHUB_USERNAME }}/weknora-sandbox:buildcache
+          cache-to: type=registry,ref=${{ secrets.DOCKERHUB_USERNAME }}/weknora-sandbox:buildcache,mode=max
 
       # Cube builds templates straight from the image and gates the build on
       # GET :49983/health, so it needs the variant with envd baked in.
@@ -158,8 +158,8 @@ jobs:
           context: .
           labels: ${{ steps.meta-cube.outputs.labels }}
           tags: ${{ steps.meta-cube.outputs.tags }}
-          cache-from: type=gha,scope=build-sandbox-cube
-          cache-to: type=gha,scope=build-sandbox-cube,mode=max
+          cache-from: type=registry,ref=${{ secrets.DOCKERHUB_USERNAME }}/weknora-sandbox:buildcache-cube
+          cache-to: type=registry,ref=${{ secrets.DOCKERHUB_USERNAME }}/weknora-sandbox:buildcache-cube,mode=max
 
       - name: Docker meta (desktop variant)
         id: meta-desktop
@@ -179,8 +179,8 @@ jobs:
           context: .
           labels: ${{ steps.meta-desktop.outputs.labels }}
           tags: ${{ steps.meta-desktop.outputs.tags }}
-          cache-from: type=gha,scope=build-sandbox-desktop
-          cache-to: type=gha,scope=build-sandbox-desktop,mode=max
+          cache-from: type=registry,ref=${{ secrets.DOCKERHUB_USERNAME }}/weknora-sandbox:buildcache-desktop
+          cache-to: type=registry,ref=${{ secrets.DOCKERHUB_USERNAME }}/weknora-sandbox:buildcache-desktop,mode=max
 
       - name: Docker meta (desktop Cube variant)
         id: meta-desktop-cube
@@ -200,8 +200,8 @@ jobs:
           context: .
           labels: ${{ steps.meta-desktop-cube.outputs.labels }}
           tags: ${{ steps.meta-desktop-cube.outputs.tags }}
-          cache-from: type=gha,scope=build-sandbox-desktop-cube
-          cache-to: type=gha,scope=build-sandbox-desktop-cube,mode=max
+          cache-from: type=registry,ref=${{ secrets.DOCKERHUB_USERNAME }}/weknora-sandbox:buildcache-desktop-cube
+          cache-to: type=registry,ref=${{ secrets.DOCKERHUB_USERNAME }}/weknora-sandbox:buildcache-desktop-cube,mode=max
 
   build-app:
     strategy:
@@ -265,8 +265,8 @@ jobs:
             WITH_ANYDOC=1
           labels: ${{ steps.meta.outputs.labels }}
           tags: ${{ secrets.DOCKERHUB_USERNAME }}/weknora-app
-          cache-from: type=gha,scope=build-app-${{ env.PLATFORM_PAIR }}
-          cache-to: type=gha,scope=build-app-${{ env.PLATFORM_PAIR }},mode=max
+          cache-from: type=registry,ref=${{ secrets.DOCKERHUB_USERNAME }}/weknora-app:buildcache-${{ env.PLATFORM_PAIR }}
+          cache-to: type=registry,ref=${{ secrets.DOCKERHUB_USERNAME }}/weknora-app:buildcache-${{ env.PLATFORM_PAIR }},mode=max
           outputs: type=image,push-by-digest=true,name-canonical=true,push=true
 
       - name: Export digest
